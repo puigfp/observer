@@ -2,6 +2,16 @@
 
 
 [[projects]]
+  name = "github.com/influxdata/influxdb"
+  packages = [
+    "client/v2",
+    "models",
+    "pkg/escape"
+  ]
+  revision = "cdae4ccde4c67c3390d8ae8a1a06bd3b4cdce5c5"
+  version = "v1.5.1"
+
+[[projects]]
   name = "github.com/urfave/cli"
   packages = ["."]
   revision = "cfb38830724cc34fedffe9a2a29fb54fa9169cd1"
@@ -10,6 +20,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "3ca3ca15cdc34a9bc8db83968a4bfeffe73ec82c85b33100c643dcd6fc5e0d65"
+  inputs-digest = "d67d654d168559ff17b93d02e4f0331600f5ca27fc034a5f09d9bede8973d8d0"
   solver-name = "gps-cdcl"
   solver-version = 1
