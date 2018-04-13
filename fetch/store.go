@@ -5,14 +5,15 @@ import (
 	"time"
 
 	influxdb "github.com/influxdata/influxdb/client/v2"
+	"github.com/puigfp/observer/util"
 )
 
-func storeMetricsOnce(influxdbClient influxdb.Client, metrics []metricPoint) error {
+func storeMetricsOnce(influxdbClient util.InfluxDBClient, metrics []metricPoint) error {
 	// create batch
 	batchPoints, err := influxdb.NewBatchPoints(influxdb.BatchPointsConfig{
-		Database:        "observer", //INFLUX_DB_DATABASE,
-		Precision:       "ms",       //INFLUX_DB_PRECISION,
-		RetentionPolicy: "autogen",  // INFLUX_DB_RETENTION_POLICY,
+		Database:        influxdbClient.Config.Database,
+		Precision:       influxdbClient.Config.Precision,
+		RetentionPolicy: influxdbClient.Config.RetentionPolicy,
 	})
 	if err != nil {
 		return err
@@ -29,10 +30,10 @@ func storeMetricsOnce(influxdbClient influxdb.Client, metrics []metricPoint) err
 	}
 
 	// write batch
-	return influxdbClient.Write(batchPoints)
+	return influxdbClient.Client.Write(batchPoints)
 }
 
-func storeMetrics(influxdbClient influxdb.Client, metricsBuf *metricsBuffer, rate time.Duration) {
+func storeMetrics(influxdbClient util.InfluxDBClient, metricsBuf *metricsBuffer, rate time.Duration) {
 	for range time.Tick(rate) {
 		metricsBuf.lock.Lock()
 		if err := storeMetricsOnce(influxdbClient, metricsBuf.buffer); err != nil {

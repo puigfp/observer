@@ -4,7 +4,6 @@ import (
 	"sync"
 	"time"
 
-	influxdb "github.com/influxdata/influxdb/client/v2"
 	"github.com/puigfp/observer/util"
 	"github.com/urfave/cli"
 )
@@ -28,10 +27,7 @@ var Command = cli.Command{
 		}
 
 		// init influxDB client
-		influxdbClient, err := influxdb.NewHTTPClient(influxdb.HTTPConfig{
-			Addr:     "http://localhost:8086", //"INFLUX_DB_ADDR",
-			Username: "admin",                 //INFLUX_DB_USERNAME,
-		})
+		influxdbClient, err := util.NewInfluxDBClient(config.InfluxDB)
 		if err != nil {
 			return err
 		}
