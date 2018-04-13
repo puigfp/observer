@@ -11,8 +11,17 @@ type Website struct {
 	PollRate int    `json:"poll_rate"`
 }
 
+type InfluxDBConfig struct {
+	Addr            string `json:"address"`
+	Username        string `json:"username"`
+	Database        string `json:"database"`
+	RetentionPolicy string `json:"retention_policy"`
+	Precision       string `json:"precision"`
+}
+
 type ConfigJSON struct {
-	Websites []Website `json:"websites"`
+	InfluxDB InfluxDBConfig `json:"influxdb"`
+	Websites []Website      `json:"websites"`
 }
 
 func ReadConfigJSON(path string) (ConfigJSON, error) {
