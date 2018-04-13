@@ -5,12 +5,14 @@ import (
 	"io/ioutil"
 )
 
+type Website struct {
+	Name     string `json:"name"`
+	URL      string `json:"url"`
+	PollRate int    `json:"poll_rate"`
+}
+
 type ConfigJSON struct {
-	Websites []struct {
-		Name     string `json:"name"`
-		URL      string `json:"url"`
-		PollRate int    `json:"poll_rate"`
-	} `json:"websites"`
+	Websites []Website `json:"websites"`
 }
 
 func ReadConfigJSON(path string) (ConfigJSON, error) {
