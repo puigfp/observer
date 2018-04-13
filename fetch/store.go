@@ -1,7 +1,6 @@
 package fetch
 
 import (
-	"log"
 	"time"
 
 	influxdb "github.com/influxdata/influxdb/client/v2"
@@ -37,14 +36,14 @@ func storeMetrics(influxdbClient util.InfluxDBClient, metricsBuf *metricsBuffer,
 	for range time.Tick(rate) {
 		metricsBuf.lock.Lock()
 		if err := storeMetricsOnce(influxdbClient, metricsBuf.buffer); err != nil {
-			log.Println("Could not send metrics to InfluxDB:", err)
+			util.ErrorLogger.Println("Could not send metrics to InfluxDB:", err)
 
 			// when the database is not available, only the last 1000 metric points are kept in memory
 			if len(metricsBuf.buffer) > 1000 {
 				metricsBuf.buffer = metricsBuf.buffer[len(metricsBuf.buffer)-1000:]
 			}
 		} else {
-			log.Printf("Emptied buffer, sent %v metrics to InfluxDB.\n", len(metricsBuf.buffer))
+			util.InfoLogger.Printf("Emptied buffer, sent %v metrics to InfluxDB.\n", len(metricsBuf.buffer))
 			metricsBuf.buffer = make([]metricPoint, 0)
 		}
 		metricsBuf.lock.Unlock()

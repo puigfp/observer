@@ -1,10 +1,10 @@
 package main
 
 import (
-	"log"
 	"os"
 
 	"github.com/puigfp/observer/fetch"
+	"github.com/puigfp/observer/util"
 	"github.com/urfave/cli"
 )
 
@@ -19,7 +19,7 @@ func main() {
 
 	err := app.Run(os.Args)
 	if err != nil {
-		log.Fatalln(err)
+		util.ErrorLogger.Fatalln(err)
 	}
 
 }
