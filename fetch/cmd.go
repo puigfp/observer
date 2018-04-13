@@ -21,7 +21,7 @@ var Command = cli.Command{
 	},
 	Action: func(c *cli.Context) error {
 		// read config
-		config, err := util.ReadConfigJSON("config.json")
+		config, err := util.ReadConfigJSON(c.String("config"))
 		if err != nil {
 			return err
 		}
