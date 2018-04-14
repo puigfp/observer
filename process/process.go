@@ -8,7 +8,7 @@ import (
 	"github.com/puigfp/observer/util"
 )
 
-var computeResponseTimeAggregateMetrics = computeResponseTimeMetricsHOF(`
+var computeResponseTimeAggregateMetrics = computeMetricsHOF(`
 	SELECT
 		MEAN(responseTime) as responseTime_avg,
 		MIN(responseTime) as responseTime_min,
@@ -22,7 +22,7 @@ var computeResponseTimeAggregateMetrics = computeResponseTimeMetricsHOF(`
 	GROUP BY time(%v, %v), website
 `)
 
-var computeResponseTimePercentileMetrics = computeResponseTimeMetricsHOF(`
+var computeResponseTimePercentileMetrics = computeMetricsHOF(`
 	SELECT
 		PERCENTILE(responseTime, 99) as responseTime_99thPercentile
 	INTO %v
@@ -34,7 +34,31 @@ var computeResponseTimePercentileMetrics = computeResponseTimeMetricsHOF(`
 	GROUP BY time(%v, %v), website
 `)
 
-func computeResponseTimeMetricsHOF(template string) func(influxdbClient util.InfluxDBClient, dest string, begin, end time.Time, window, offset time.Duration) error {
+var computeSuccessCountMetrics = computeMetricsHOF(`
+	SELECT
+		COUNT(success) as success_true_count
+	INTO %v
+	FROM metrics
+	WHERE
+		success = true
+		AND time >= %v
+		AND time < %v
+	GROUP BY time(%v, %v), website
+`)
+
+var computeFailCountMetrics = computeMetricsHOF(`
+	SELECT
+		COUNT(success) as success_false_count
+	INTO %v
+	FROM metrics
+	WHERE
+		success = false
+		AND time >= %v
+		AND time < %v
+	GROUP BY time(%v, %v), website
+`)
+
+func computeMetricsHOF(template string) func(influxdbClient util.InfluxDBClient, dest string, begin, end time.Time, window, offset time.Duration) error {
 	return func(influxdbClient util.InfluxDBClient, dest string, begin, end time.Time, window, offset time.Duration) error {
 		queryString := fmt.Sprintf(
 			template,
@@ -61,15 +85,25 @@ func computeResponseTimeMetricsLoop(influxdbClient util.InfluxDBClient, dest str
 		offset := begin.Sub(roundSub(begin, window))
 
 		if err := computeResponseTimeAggregateMetrics(influxdbClient, dest, begin, end, window, offset); err != nil {
-			util.ErrorLogger.Println("Error while computing response time aggregate metrics:", err)
-		} else {
-			util.InfoLogger.Printf("Computed response time aggregate metrics for ['%v', '%v'[ window.", begin, end)
+			util.ErrorLogger.Println(err)
 		}
 
 		if err := computeResponseTimePercentileMetrics(influxdbClient, dest, begin, end, window, offset); err != nil {
-			util.ErrorLogger.Println("Error while computing response time percentile metrics:", err)
-		} else {
-			util.InfoLogger.Printf("Computed response time percentile metrics for ['%v', '%v'[ window.", begin, end)
+			util.ErrorLogger.Println(err)
 		}
+
+		if err := computeResponseTimePercentileMetrics(influxdbClient, dest, begin, end, window, offset); err != nil {
+			util.ErrorLogger.Println(err)
+		}
+
+		if err := computeSuccessCountMetrics(influxdbClient, dest, begin, end, window, offset); err != nil {
+			util.ErrorLogger.Println(err)
+		}
+
+		if err := computeFailCountMetrics(influxdbClient, dest, begin, end, window, offset); err != nil {
+			util.ErrorLogger.Println(err)
+		}
+
+		util.InfoLogger.Printf("Computed metrics for ['%v', '%v'[ window.", begin, end)
 	}
 }
