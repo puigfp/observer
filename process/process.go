@@ -13,7 +13,7 @@ var computeResponseTimeAggregateMetrics = computeMetricsHOF(`
 		MEAN(responseTime) as responseTime_avg,
 		MIN(responseTime) as responseTime_min,
 		MAX(responseTime) as responseTime_max 
-	INTO %v
+	INTO metrics_%v
 	FROM metrics
 	WHERE
 		responseTime > 0
@@ -25,7 +25,7 @@ var computeResponseTimeAggregateMetrics = computeMetricsHOF(`
 var computeResponseTimePercentileMetrics = computeMetricsHOF(`
 	SELECT
 		PERCENTILE(responseTime, 99) as responseTime_99thPercentile
-	INTO %v
+	INTO metrics_%v
 	FROM metrics
 	WHERE
 		responseTime > 0
@@ -37,7 +37,7 @@ var computeResponseTimePercentileMetrics = computeMetricsHOF(`
 var computeSuccessCountMetrics = computeMetricsHOF(`
 	SELECT
 		COUNT(success) as success_true_count
-	INTO %v
+	INTO metrics_%v
 	FROM metrics
 	WHERE
 		success = true
@@ -49,7 +49,7 @@ var computeSuccessCountMetrics = computeMetricsHOF(`
 var computeFailCountMetrics = computeMetricsHOF(`
 	SELECT
 		COUNT(success) as success_false_count
-	INTO %v
+	INTO metrics_%v
 	FROM metrics
 	WHERE
 		success = false
@@ -103,6 +103,12 @@ func computeMetricsLoop(influxdbClient util.InfluxDBClient, dest string, window,
 		if err := computeFailCountMetrics(influxdbClient, dest, begin, end, window, offset); err != nil {
 			util.ErrorLogger.Println(err)
 		}
+
+		if err := computeStatusCounts(influxdbClient, dest, begin, end); err != nil {
+			util.ErrorLogger.Println(err)
+		}
+
+		// TODO: compute alerts
 
 		util.InfoLogger.Printf("Computed metrics for ['%v', '%v'[ window.", begin, end)
 	}

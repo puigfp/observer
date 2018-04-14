@@ -34,20 +34,20 @@ var Command = cli.Command{
 
 		// compute metrics for 2m window every 5 seconds
 		go computeMetricsLoop(
-			influxdbClient, "metrics_2m",
+			influxdbClient, "2m",
 			time.Duration(2)*time.Minute, time.Duration(5)*time.Second, time.Duration(5)*time.Second,
 		)
 
 		// compute metrics for 10m window every 10 seconds
 		go computeMetricsLoop(
-			influxdbClient, "metrics_10m",
+			influxdbClient, "10m",
 			time.Duration(10)*time.Minute, time.Duration(10)*time.Second, time.Duration(5)*time.Second,
 		)
 
 		// compute metrics for 1h window every minute
 		// (this last one is also used to keep the process running)
 		computeMetricsLoop(
-			influxdbClient, "metrics_1h",
+			influxdbClient, "1h",
 			time.Hour, time.Minute, time.Duration(5)*time.Second,
 		)
 
