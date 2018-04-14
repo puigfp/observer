@@ -32,17 +32,21 @@ var Command = cli.Command{
 		}
 		defer influxdbClient.Client.Close()
 
-		go computeResponseTimeMetricsLoop(
+		// compute metrics for 2m window every 5 seconds
+		go computeMetricsLoop(
 			influxdbClient, "metrics_2m",
-			time.Duration(2)*time.Minute, time.Duration(10)*time.Second, time.Duration(5)*time.Second,
+			time.Duration(2)*time.Minute, time.Duration(5)*time.Second, time.Duration(5)*time.Second,
 		)
 
-		go computeResponseTimeMetricsLoop(
+		// compute metrics for 10m window every 10 seconds
+		go computeMetricsLoop(
 			influxdbClient, "metrics_10m",
-			time.Duration(10)*time.Minute, time.Duration(30)*time.Second, time.Duration(5)*time.Second,
+			time.Duration(10)*time.Minute, time.Duration(10)*time.Second, time.Duration(5)*time.Second,
 		)
 
-		computeResponseTimeMetricsLoop(
+		// compute metrics for 1h window every minute
+		// (this last one is also used to keep the process running)
+		computeMetricsLoop(
 			influxdbClient, "metrics_1h",
 			time.Hour, time.Minute, time.Duration(5)*time.Second,
 		)

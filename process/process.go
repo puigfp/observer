@@ -78,7 +78,7 @@ func computeMetricsHOF(template string) func(influxdbClient util.InfluxDBClient,
 	}
 }
 
-func computeResponseTimeMetricsLoop(influxdbClient util.InfluxDBClient, dest string, window, tick, security time.Duration) {
+func computeMetricsLoop(influxdbClient util.InfluxDBClient, dest string, window, tick, security time.Duration) {
 	for t := range time.Tick(tick) {
 		end := roundSub(t.Add(-security), tick)
 		begin := end.Add(-window)

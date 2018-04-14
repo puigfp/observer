@@ -46,7 +46,7 @@ var Command = cli.Command{
 			go poll(website, metricsChan)
 		}
 
-		// launch buffer emptying goroutine, which regularily sends the buffer's content to the database
+		// send buffer content to influxDB every 5 seconds
 		go storeMetrics(influxdbClient, &metricsBuf, time.Duration(5)*time.Second)
 
 		// retrieve the metrics from the channel synchronously to keep the process running
