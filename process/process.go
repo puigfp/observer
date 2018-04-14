@@ -92,10 +92,6 @@ func computeMetricsLoop(influxdbClient util.InfluxDBClient, dest string, window,
 			util.ErrorLogger.Println(err)
 		}
 
-		if err := computeResponseTimePercentileMetrics(influxdbClient, dest, begin, end, window, offset); err != nil {
-			util.ErrorLogger.Println(err)
-		}
-
 		if err := computeSuccessCountMetrics(influxdbClient, dest, begin, end, window, offset); err != nil {
 			util.ErrorLogger.Println(err)
 		}
