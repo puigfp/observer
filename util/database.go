@@ -11,8 +11,9 @@ type InfluxDBClient struct {
 
 func NewInfluxDBClient(config InfluxDBConfig) (InfluxDBClient, error) {
 	client, err := influxdb.NewHTTPClient(influxdb.HTTPConfig{
-		Addr:     "http://localhost:8086", //"INFLUX_DB_ADDR",
-		Username: "admin",                 //INFLUX_DB_USERNAME,
+		Addr:     config.Addr,
+		Username: config.Username,
+		Password: config.Password,
 	})
 
 	return InfluxDBClient{
