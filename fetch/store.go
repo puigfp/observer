@@ -58,6 +58,7 @@ func convertMetricPointToTagsAndFields(point metricPoint) (map[string]string, ma
 	fields := map[string]interface{}{
 		"responseTime": point.responseTime,
 		"status":       point.status,
+		"statusCode":   point.statusCode,
 		"success":      point.success,
 	}
 

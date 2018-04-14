@@ -15,7 +15,8 @@ func pollOnce(site util.Website) metricPoint {
 		return metricPoint{
 			website:      site.Name,
 			timestamp:    time.Now(),
-			responseTime: 0,
+			responseTime: -1,
+			statusCode:   -1,
 			status:       err.Error(),
 			success:      false,
 		}
@@ -26,6 +27,7 @@ func pollOnce(site util.Website) metricPoint {
 		website:      site.Name,
 		timestamp:    time.Now(),
 		responseTime: time.Since(begin).Nanoseconds(),
+		statusCode:   resp.StatusCode,
 		status:       resp.Status,
 		success:      200 <= resp.StatusCode && resp.StatusCode < 400,
 	}
