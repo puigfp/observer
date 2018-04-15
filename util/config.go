@@ -6,15 +6,7 @@ import (
 	"time"
 )
 
-type InfluxDBConfig struct {
-	Addr            string `json:"address"`
-	Username        string `json:"username"`
-	Password        string `json:"password"`
-	Database        string `json:"database"`
-	RetentionPolicy string `json:"retention_policy"`
-	Precision       string `json:"precision"`
-}
-
+// ConfigJSON describes the structure of a valid configuration file for the fetch/process commands
 type ConfigJSON struct {
 	InfluxDB InfluxDBConfig `json:"influxdb"`
 	Websites []struct {
@@ -24,17 +16,33 @@ type ConfigJSON struct {
 	} `json:"websites"`
 }
 
+// InfluxDBConfig is a type made to hold a full influxDB configuration
+type InfluxDBConfig struct {
+	Addr            string `json:"address"`
+	Username        string `json:"username"`
+	Password        string `json:"password"`
+	Database        string `json:"database"`
+	RetentionPolicy string `json:"retention_policy"`
+	Precision       string `json:"precision"`
+}
+
+// Config is a type made to hold a configuration
+//
+// Config ≠ ConfigJSON because some processing is done on the ConfigJSON
+// in the ReadConfigJSON func before returning it.
 type Config struct {
 	InfluxDB InfluxDBConfig
 	Websites map[string]Website
 }
 
+// Website is a type made to store all the relevant information about a monitored website
 type Website struct {
 	Name     string
 	URL      string
 	PollRate time.Duration
 }
 
+// ReadConfigJSON reads, parses and processes a valid configuration file, and then returns the config
 func ReadConfigJSON(path string) (Config, error) {
 	// read file
 	configFileContent, err := ioutil.ReadFile(path)
