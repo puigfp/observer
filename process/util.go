@@ -1,6 +1,28 @@
 package process
 
-import "time"
+import (
+	"encoding/json"
+	"strconv"
+	"time"
+)
+
+func parseJSONNumber(number interface{}) (int64, bool) {
+	if number == nil {
+		return 0, true
+	}
+
+	numberStr, ok := number.(json.Number)
+	if !ok {
+		return 0, false
+	}
+
+	numberInt, err := strconv.ParseInt(string(numberStr), 10, 64)
+	if err != nil {
+		return 0, false
+	}
+
+	return numberInt, true
+}
 
 func roundSub(t time.Time, d time.Duration) time.Time {
 	res := t.Round(d)

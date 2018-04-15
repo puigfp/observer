@@ -104,8 +104,6 @@ func computeMetricsLoop(influxdbClient util.InfluxDBClient, dest string, window,
 			util.ErrorLogger.Println(err)
 		}
 
-		// TODO: compute alerts
-
 		util.InfoLogger.Printf("Computed metrics for ['%v', '%v'[ window.", begin, end)
 	}
 }
