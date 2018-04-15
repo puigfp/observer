@@ -59,7 +59,7 @@ var Command = cli.Command{
 			security,
 		)
 
-		// compute alerts based every 10 seconds
+		// compute alerts every 10 seconds
 		// (this last one is also used to keep the process running)
 		computeAlertsLoop(influxdbClient, "2m", time.Duration(10)*time.Second)
 

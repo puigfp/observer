@@ -6,6 +6,17 @@ import (
 	"github.com/puigfp/observer/util"
 )
 
+func computeAlertsLoop(influxdbClient util.InfluxDBClient, window string, rate time.Duration) {
+	statuses := make(map[string]bool)
+	for range time.Tick(rate) {
+		if err := computeAlerts(influxdbClient, window, &statuses); err != nil {
+			util.ErrorLogger.Println(err)
+		} else {
+			util.InfoLogger.Println("Computed alerts.")
+		}
+	}
+}
+
 func computeMetricsLoop(influxdbClient util.InfluxDBClient, dest string, window, tick, security time.Duration) {
 	for t := range time.Tick(tick) {
 		end := roundSub(t.Add(-security), tick)
