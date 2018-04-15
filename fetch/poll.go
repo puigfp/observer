@@ -50,7 +50,7 @@ func pollOnce(site util.Website) metricPoint {
 
 // poll runs indefinitely, calls pollOnce regularily, and sends back the metric points through the channel
 func poll(site util.Website, metricsChan chan<- metricPoint) {
-	for range time.Tick(time.Duration(site.PollRate) * time.Millisecond) {
+	for range time.Tick(site.PollRate) {
 		// launch a new goroutine for each request
 		// in this way, if the website takes longer than the poll rate to respond, a new request is made anyway
 		go func() {
