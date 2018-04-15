@@ -42,7 +42,9 @@ func storeMetrics(influxdbClient util.InfluxDBClient, metricsBuf *metricsBuffer,
 
 			// when the database is not available, only the last 1000 metric points are kept in memory
 			if len(metricsBuf.buffer) > 1000 {
-				metricsBuf.buffer = metricsBuf.buffer[len(metricsBuf.buffer)-1000:]
+				newBuf := make([]metricPoint, 1000)
+				copy(newBuf, metricsBuf.buffer[len(metricsBuf.buffer)-1000:])
+				metricsBuf.buffer = newBuf
 			}
 		} else {
 			util.InfoLogger.Printf("Emptied buffer, sent %v metrics to InfluxDB.\n", len(metricsBuf.buffer))
