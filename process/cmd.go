@@ -7,6 +7,7 @@ import (
 	"github.com/urfave/cli"
 )
 
+// Command is the main function of this package
 var Command = cli.Command{
 	Name:    "process",
 	Aliases: []string{"p"},

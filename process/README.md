@@ -22,7 +22,7 @@ This package exports a CLI command object. When this command is launched:
 
   - `success=true` and `success=false` counts are also computed using `SELECT [...] INTO [...]` influxDB queries
 
-  - more complicated metrics, such as status strings count, are computed manually, and require several queries
+  - more complicated metrics, such as status strings count, are computed manually, and require several queries (the code can get quite long because of the way the influxDB golang client returns the data: a lot of preprocessing and validation needs to be done manually)
 
 - the main goroutine performs edge detection on the metrics computed over 2m long timeframes to detect when a website become available or unavailable
 
