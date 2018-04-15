@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// metricPoint stores the information about how a request went
 type metricPoint struct {
 	timestamp    time.Time
 	website      string
@@ -14,6 +15,7 @@ type metricPoint struct {
 	success      bool
 }
 
+// metricsBuffer is a thread-safe metricPoint slice
 type metricsBuffer struct {
 	buffer []metricPoint
 	lock   sync.Mutex

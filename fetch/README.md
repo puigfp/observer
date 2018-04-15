@@ -12,11 +12,11 @@ This package exports a CLI command object. When this command is launched:
 
 - a channel through which the metrics will be sent back is created
 
+- the 'main' goroutine receives the metrics by looping over the channel and stores those metrics in the buffer
+
 - a polling goroutine is launched for each website: each goroutine will poll the website and send back raw metrics through the channel
 
 - a buffer emptying goroutine is launched: this goroutine will empty the raw metrics buffer and send its content to influxDB every 5 seconds
-
-- the 'main' goroutine receives the metrics by listening to the channel and store those metrics in the buffer
 
 ## Folder structure
 

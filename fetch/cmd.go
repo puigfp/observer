@@ -8,6 +8,7 @@ import (
 	"github.com/urfave/cli"
 )
 
+// Command represents the main function of this package
 var Command = cli.Command{
 	Name:    "fetch",
 	Aliases: []string{"f"},

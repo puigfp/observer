@@ -7,6 +7,7 @@ import (
 	"github.com/puigfp/observer/util"
 )
 
+// storeMetricsOnce sends metric points to influxDB in a single batch
 func storeMetricsOnce(influxdbClient util.InfluxDBClient, metrics []metricPoint) error {
 	// create batch
 	batchPoints, err := influxdb.NewBatchPoints(influxdb.BatchPointsConfig{
@@ -32,6 +33,7 @@ func storeMetricsOnce(influxdbClient util.InfluxDBClient, metrics []metricPoint)
 	return influxdbClient.Client.Write(batchPoints)
 }
 
+// storeMetrics runs indefinitely and regularily sends the metrics stored in the provited thread-safe buffer to influxDB
 func storeMetrics(influxdbClient util.InfluxDBClient, metricsBuf *metricsBuffer, rate time.Duration) {
 	for range time.Tick(rate) {
 		metricsBuf.lock.Lock()
@@ -50,6 +52,7 @@ func storeMetrics(influxdbClient util.InfluxDBClient, metricsBuf *metricsBuffer,
 	}
 }
 
+// convertMetricPointToTagsAndFields transforms a metric point into values that can be sent directly to influxDB
 func convertMetricPointToTagsAndFields(point metricPoint) (map[string]string, map[string]interface{}) {
 	tags := map[string]string{
 		"website": point.website,
