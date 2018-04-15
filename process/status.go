@@ -11,6 +11,53 @@ import (
 	"github.com/puigfp/observer/util"
 )
 
+// computeStatusesCounts computes the number of times each status appears in the specified timeframe and sends this data to influxDB
+func computeStatusesCounts(influxdbClient util.InfluxDBClient, dest string, begin, end time.Time) error {
+	// get statuses
+	statuses, err := retrieveStatuses(influxdbClient, begin, end)
+	if err != nil {
+		return err
+	}
+
+	// get statuses counts
+	statusesCounts, err := retrieveStatusesCounts(influxdbClient, statuses, begin, end)
+	if err != nil {
+		return err
+	}
+
+	// create batch
+	batchPoints, err := influxdb.NewBatchPoints(influxdb.BatchPointsConfig{
+		Database:        influxdbClient.Config.Database,
+		Precision:       influxdbClient.Config.Precision,
+		RetentionPolicy: influxdbClient.Config.RetentionPolicy,
+	})
+	if err != nil {
+		return err
+	}
+
+	// add points to batch
+	for website, counts := range statusesCounts {
+		// serialize to count object to JSON to store it in a field
+		serialized, err := json.Marshal(counts)
+		if err != nil {
+			return err
+		}
+
+		tags := map[string]string{"website": website}
+		fields := map[string]interface{}{"status_counts": string(serialized)}
+
+		pt, err := influxdb.NewPoint(fmt.Sprintf("metrics_%v", dest), tags, fields, begin)
+		if err != nil {
+			return err
+		}
+		batchPoints.AddPoint(pt)
+	}
+
+	// write batch
+	return influxdbClient.Client.Write(batchPoints)
+}
+
+// retrieveStatuses retrieves from the database a `website` -> `unique statuses slice` map
 func retrieveStatuses(influxdbClient util.InfluxDBClient, begin, end time.Time) (map[string][]string, error) {
 	status := make(map[string][]string)
 
@@ -58,6 +105,7 @@ func retrieveStatuses(influxdbClient util.InfluxDBClient, begin, end time.Time) 
 	return status, nil
 }
 
+// retrieveStatusCount retrieves from the database the number of times the status appears in the timeframe
 func retrieveStatusCount(influxdbClient util.InfluxDBClient, status string, website string, begin, end time.Time) (int, error) {
 	queryString := fmt.Sprintf(`
 			SELECT COUNT(status) AS count
@@ -104,6 +152,7 @@ func retrieveStatusCount(influxdbClient util.InfluxDBClient, status string, webs
 	return int(n), nil
 }
 
+// retrieveStatusesCounts retrieves from the database a `website` -> `status` -> `count` map
 func retrieveStatusesCounts(influxdbClient util.InfluxDBClient, statuses map[string][]string, begin, end time.Time) (map[string]map[string]int, error) {
 	tasks := 0
 	counts := make(map[string]map[string]int)
@@ -140,45 +189,4 @@ func retrieveStatusesCounts(influxdbClient util.InfluxDBClient, statuses map[str
 	}
 
 	return counts, nil
-}
-
-func computeStatusCounts(influxdbClient util.InfluxDBClient, dest string, begin, end time.Time) error {
-	statuses, err := retrieveStatuses(influxdbClient, begin, end)
-	if err != nil {
-		return err
-	}
-
-	statusesCounts, err := retrieveStatusesCounts(influxdbClient, statuses, begin, end)
-	if err != nil {
-		return err
-	}
-
-	// create batch
-	batchPoints, err := influxdb.NewBatchPoints(influxdb.BatchPointsConfig{
-		Database:        influxdbClient.Config.Database,
-		Precision:       influxdbClient.Config.Precision,
-		RetentionPolicy: influxdbClient.Config.RetentionPolicy,
-	})
-	if err != nil {
-		return err
-	}
-
-	// add points to batch
-	for website, counts := range statusesCounts {
-		serialized, err := json.Marshal(counts)
-		if err != nil {
-			return err
-		}
-
-		tags := map[string]string{"website": website}
-		fields := map[string]interface{}{"status_counts": string(serialized)}
-		pt, err := influxdb.NewPoint(fmt.Sprintf("metrics_%v", dest), tags, fields, begin)
-		if err != nil {
-			return err
-		}
-		batchPoints.AddPoint(pt)
-	}
-
-	// write batch
-	return influxdbClient.Client.Write(batchPoints)
 }
