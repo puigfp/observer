@@ -42,6 +42,10 @@ func storeMetrics(influxdbClient util.InfluxDBClient, metricsBuf *metricsBuffer,
 
 			// when the database is not available, only the last 1000 metric points are kept in memory
 			if len(metricsBuf.buffer) > 1000 {
+				// `metricsBuf.buffer = metricsBuf.buffer[len(metricsBuf.buffer)-1000:]` does not have the intended effect,
+				// the whole underlying array is still kept in memory and can grow infinitely
+				//
+				// cf. https://blog.golang.org/go-slices-usage-and-internals
 				newBuf := make([]metricPoint, 1000)
 				copy(newBuf, metricsBuf.buffer[len(metricsBuf.buffer)-1000:])
 				metricsBuf.buffer = newBuf
