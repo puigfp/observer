@@ -11,15 +11,6 @@ import (
 	"github.com/puigfp/observer/util"
 )
 
-func index(slice []string, str string) (int, bool) {
-	for i, elem := range slice {
-		if elem == str {
-			return i, true
-		}
-	}
-	return 0, false
-}
-
 func retrieveStatuses(influxdbClient util.InfluxDBClient, begin, end time.Time) (map[string][]string, error) {
 	status := make(map[string][]string)
 

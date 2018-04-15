@@ -9,3 +9,12 @@ func roundSub(t time.Time, d time.Duration) time.Time {
 	}
 	return res
 }
+
+func index(slice []string, str string) (int, bool) {
+	for i, elem := range slice {
+		if elem == str {
+			return i, true
+		}
+	}
+	return 0, false
+}
