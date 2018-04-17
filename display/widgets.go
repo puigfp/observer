@@ -76,14 +76,14 @@ func refreshStatisticsWidget(statistics *ui.Par, st *state) *ui.Par {
 		website := st.websites[st.websitesOrder[st.selectedWebsite]]
 		if website.metrics10m != nil && website.metrics1h != nil {
 			(*statistics) = *ui.NewPar(fmt.Sprintf(`[Last 10 minutes](fg-yellow)
-			[---------------](fg-yellow)
-			
-			%v
-			
-			[Last hour](fg-yellow)
-			[---------](fg-yellow)
-			
-			%v`,
+				[---------------](fg-yellow)
+				
+				%v
+				
+				[Last hour](fg-yellow)
+				[---------](fg-yellow)
+				
+				%v`,
 				getStatisticsString(*(website.metrics10m)),
 				getStatisticsString(*(website.metrics1h)),
 			))
@@ -104,15 +104,14 @@ func refreshStatisticsWidget(statistics *ui.Par, st *state) *ui.Par {
 // getStatisticsString computes a string that is used by refreshStatisticsWidget
 func getStatisticsString(m metrics) string {
 	s := fmt.Sprintf(`[Availability](fg-bold) %.1f%%
+		[Response time](fg-bold)
+		- avg:   %.0fms
+		- min:   %vms
+		- max:   %vms
+		- 99th:  %vms
 
-[Response time](fg-bold)
-- avg:   %.0fms
-- min:   %vms
-- max:   %vms
-- 99th:  %vms
-
-[Status](fg-bold)
-`,
+		[Status](fg-bold)
+		`,
 		m.availability*100,
 		m.responseTimeAvg/1000000,
 		m.responseTimeMin/1000000,
