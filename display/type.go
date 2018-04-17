@@ -18,19 +18,21 @@ type state struct {
 
 // website holds a website's metrics
 type website struct {
-	name       string
-	status     bool
-	metrics10m metrics
-	metrics1h  metrics
+	name   string
+	status *bool
+
+	// metrics fields are nullable
+	metrics10m *metrics
+	metrics1h  *metrics
 }
 
 // metrics holds a website's metrics
 type metrics struct {
-	availability               string
-	responseTimeAvg            string
-	responseTimeMin            string
-	responseTimeMax            string
-	responseTime99thPercentile string
+	availability               float64
+	responseTimeAvg            float64
+	responseTimeMin            int64
+	responseTimeMax            int64
+	responseTime99thPercentile int64
 	statuses                   map[string]int
 }
 
