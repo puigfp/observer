@@ -32,11 +32,3 @@ func render() {
 	ui.Body.Align()
 	ui.Render(ui.Body)
 }
-
-// func renderResizeLoop(st *state) {
-// 	go func() {
-// 		for range time.Tick(time.Second) {
-// 			render(st)
-// 		}
-// 	}()
-// }
