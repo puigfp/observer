@@ -7,12 +7,6 @@ import (
 	ui "github.com/gizak/termui"
 )
 
-var (
-	summaryWidget    *ui.List
-	statisticsWidget *ui.Par
-	alertsWidget     *ui.List
-)
-
 // refreshSummaryWidget updates an already instanciated summary widget with the current state data
 func refreshSummaryWidget(summary *ui.List, st *state) *ui.List {
 	summaryList := make([]string, 0, len(st.websites))
