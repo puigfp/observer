@@ -19,10 +19,15 @@ func refreshSummaryWidget(summary *ui.List, st *state) *ui.List {
 			line += "   "
 		}
 
-		if st.websites[website].status {
-			line += "[[UP]](fg-green)   "
+		status := st.websites[website].status
+		if status != nil {
+			if *(st.websites[website].status) {
+				line += "[[UP]](fg-green)      "
+			} else {
+				line += "[[DOWN]](fg-red)    "
+			}
 		} else {
-			line += "[[DOWN]](fg-red) "
+			line += "[[NO DATA]](fg-yellow) "
 		}
 
 		line += st.websites[website].name
@@ -66,18 +71,28 @@ func refreshAlertsWidget(alerts *ui.List, st *state) *ui.List {
 
 // refreshStatisticsWidget updates an already instanciated statistics widget with the current state data
 func refreshStatisticsWidget(statistics *ui.Par, st *state) *ui.Par {
-	(*statistics) = *ui.NewPar(fmt.Sprintf(`[Last 10 minutes](fg-yellow)
-[---------------](fg-yellow)
 
-%v
-
-[Last hour](fg-yellow)
-[---------](fg-yellow)
-
-%v`,
-		getStatisticsString(st.websites[st.websitesOrder[st.selectedWebsite]].metrics10m),
-		getStatisticsString(st.websites[st.websitesOrder[st.selectedWebsite]].metrics1h),
-	))
+	if st.selectedWebsite < len(st.websites) {
+		website := st.websites[st.websitesOrder[st.selectedWebsite]]
+		if website.metrics10m != nil && website.metrics1h != nil {
+			(*statistics) = *ui.NewPar(fmt.Sprintf(`[Last 10 minutes](fg-yellow)
+			[---------------](fg-yellow)
+			
+			%v
+			
+			[Last hour](fg-yellow)
+			[---------](fg-yellow)
+			
+			%v`,
+				getStatisticsString(*(website.metrics10m)),
+				getStatisticsString(*(website.metrics1h)),
+			))
+		} else {
+			(*statistics) = *ui.NewPar("NO DATA")
+		}
+	} else {
+		(*statistics) = *ui.NewPar("NO DATA")
+	}
 
 	statistics.BorderLabel = "Statistics"
 	statistics.TextFgColor = ui.ColorWhite
@@ -88,21 +103,21 @@ func refreshStatisticsWidget(statistics *ui.Par, st *state) *ui.Par {
 
 // getStatisticsString computes a string that is used by refreshStatisticsWidget
 func getStatisticsString(m metrics) string {
-	s := fmt.Sprintf(`[Availability](fg-bold) %v
+	s := fmt.Sprintf(`[Availability](fg-bold) %.1f%%
 
 [Response time](fg-bold)
-- avg:   %v
-- min:   %v
-- max:   %v
-- 99th:  %v
+- avg:   %.0fms
+- min:   %vms
+- max:   %vms
+- 99th:  %vms
 
 [Status](fg-bold)
 `,
-		m.availability,
-		m.responseTimeAvg,
-		m.responseTimeMin,
-		m.responseTimeMax,
-		m.responseTime99thPercentile,
+		m.availability*100,
+		m.responseTimeAvg/1000000,
+		m.responseTimeMin/1000000,
+		m.responseTimeMax/1000000,
+		m.responseTime99thPercentile/1000000,
 	)
 
 	statuses := make([]string, 0)
@@ -112,7 +127,6 @@ func getStatisticsString(m metrics) string {
 	}
 
 	sort.Slice(statuses, func(i, j int) bool {
-		fmt.Println(m.statuses[statuses[i]], m.statuses[statuses[i]])
 		return m.statuses[statuses[i]] > m.statuses[statuses[j]] || statuses[i] < statuses[j]
 	})
 
