@@ -85,9 +85,9 @@ func retrieveAlerts(influxdbClient util.InfluxDBClient, window string) (map[stri
 		}
 
 		// parse/type assert influxDB values
-		trueCount, ok1 := parseJSONNumber(series.Values[0][trueCountIndex])
-		falseCount, ok2 := parseJSONNumber(series.Values[0][falseCountIndex])
-		timestamp, ok3 := parseJSONNumber(series.Values[0][timestampIndex])
+		trueCount, ok1 := util.ParseJSONNumber(series.Values[0][trueCountIndex])
+		falseCount, ok2 := util.ParseJSONNumber(series.Values[0][falseCountIndex])
+		timestamp, ok3 := util.ParseJSONNumber(series.Values[0][timestampIndex])
 		if !ok1 || !ok2 || !ok3 {
 			return alerts, errors.New("success counts returned by influxDB could not be interpreted as integers")
 		}
