@@ -49,43 +49,32 @@ This project doesn't handle the deletion of old metrics and leave this task to i
 
 To run this project manually, it is required to run each module in its own shell. This project does not provide any way to daemonize the fetch and process processes (in production, those processes should run in the background and be managed by a service manager such as systemd, and the same thing applies to the influxDB database).
 
-You can easily download and compile this project and its dependencies by runnning the following commands:
+You can easily download and compile this project and its dependencies by runnning the following command:
 
 ```bash
-# clone repository to $GO_PATH/src/github.com/puigfp/observer
-go get -d -v github.com github.com/puigfp/observer
-
-cd $GO_PATH/src/github.com/puigfp/observer
-
-# download dependencies in the right versions to vendor/
-dep ensure
-
-# compile project
-go build
+go get -v github.com github.com/puigfp/observer
 ```
-
-Unfortunately, a dependency of one of this project's dependencies has made a breaking change, so this project will not compile if you try to install it using `go get -v github.com/puigfp/observer`. However, it compiles when using dep to fetch the dependencies in the right versions.
 
 Copy the `config.template.json` to a brand new `config.json` and choose some websites to monitor.
 
-Run these 3 commands in the same folder:
+Run these 3 commands in the folder where you saved your configuration file (or use an optional flag to specify a custom configuration file, run `observer help <command>` for more info):
 
 Fetch:
 
 ```bash
-./observer fetch
+observer fetch
 ```
 
 Process:
 
 ```bash
-./observer process
+observer process
 ```
 
 Display:
 
 ```bash
-./observer display
+observer display
 ```
 
 (press q to quit the dashboard)
