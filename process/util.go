@@ -2,6 +2,7 @@ package process
 
 import "time"
 
+// roundSub rounds t to the nearest "multiple" of d that is lower that t
 func roundSub(t time.Time, d time.Duration) time.Time {
 	res := t.Round(d)
 	if res.After(t) {

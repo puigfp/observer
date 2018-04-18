@@ -16,10 +16,9 @@ func pollOnce(site util.Website) metricPoint {
 	if err != nil {
 		// Unfortunately, golang errors do not have an "error type" field.
 		// The error message contains some informations specific to this instance of the error,
-		// which is not helpful because we want to be able to get "error types" count.
+		// which is not helpful because we want to be able to get "error types" counts.
 		// The following lines are not pretty clean, but the idea is to extract the last part of
-		// the error message which can look like `Get https://aol.com/: dial tcp: lookup aol.com: no such host`
-		// (random example). In that case, the following code would extracts `no such host`.
+		// the error message which can look like `Get https://aol.com/: dial tcp: lookup aol.com: no such host` (random example). In that case, the following code would extracts `no such host`.
 		// Only storing a value that does not change between instances of the same error
 		// simplifies the code that counts the error types over different windows of time.
 		errString := err.Error()

@@ -90,6 +90,16 @@ observer display
 
 (the fetcher and processor must have been running for at least 1 minute before the display is able to display the full metrics information)
 
+Metrics are computed:
+
+  - each 5 seconds for the last 2 minutes window
+
+  - each 10 seconds for the last 10 minutes window
+
+  - each minute for the last hour window
+
+Alerts are computed every 5 seconds.
+
 ## Running the tests
 
 ```bash
@@ -171,6 +181,8 @@ go test ./...
   - Better handling of the `net/http` error messages categorization.
 
   - Better handling of errors that can happen in the display part, the current UI does not show any error message if something goes wrong when fetching the data from the database, and instead only shows "NO DATA" in place of the metrics.
+
+  - Better handling of terminal window resize, right now, the programs needs to wait for the next (keypress or metrics) fetch triggered render to resize the widgets to fit the new window size.
 
 - possible design improvements
 

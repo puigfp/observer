@@ -127,7 +127,10 @@ func getStatisticsString(m metrics) string {
 	}
 
 	sort.Slice(statuses, func(i, j int) bool {
-		return m.statuses[statuses[i]] > m.statuses[statuses[j]] || statuses[i] < statuses[j]
+		if m.statuses[statuses[i]] != m.statuses[statuses[j]] {
+			return m.statuses[statuses[i]] > m.statuses[statuses[j]]
+		}
+		return statuses[i] < statuses[j]
 	})
 
 	for _, status := range statuses {

@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+// checkAlertsTestResults run the filterAlerts func, compares its output with the expected output, and makes the test fail if necessary
 func checkAlertTestResult(alerts map[string]alert, statuses map[string]bool, expectedAlerts []alert, expectedStatuses map[string]bool, t *testing.T) {
 	// call edge detection logic
 	filteredAlerts := filterAlerts(alerts, &statuses)

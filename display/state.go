@@ -6,6 +6,7 @@ import (
 	"github.com/puigfp/observer/util"
 )
 
+// initState initialize the state object with the data contained in the config file
 func initState(config util.Config, st *state) error {
 	st.websites = make(map[string]website)
 	st.websitesOrder = make([]string, 0)

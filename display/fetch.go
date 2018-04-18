@@ -11,6 +11,7 @@ import (
 	"github.com/puigfp/observer/util"
 )
 
+// updateState fetchs the last metrics from the database and updates the UI using the new data
 func updateState(influxdbClient util.InfluxDBClient, w widgets, st *state) {
 	fetchState(influxdbClient, st)
 	st.lock.Lock()
@@ -21,6 +22,7 @@ func updateState(influxdbClient util.InfluxDBClient, w widgets, st *state) {
 	render()
 }
 
+// updateState fetches the last metrics from the database and update the state
 func fetchState(influxdbClient util.InfluxDBClient, st *state) error {
 	metrics2m, err := fetchMetrics(influxdbClient, "2m")
 	if err != nil {
@@ -75,6 +77,7 @@ func fetchState(influxdbClient util.InfluxDBClient, st *state) error {
 	return nil
 }
 
+// fetchMetrics fetches the last metrics over a certain window from the database
 func fetchMetrics(influxdbClient util.InfluxDBClient, window string) (map[string]metrics, error) {
 	queryString := fmt.Sprintf(`
 		SELECT
@@ -159,6 +162,7 @@ func fetchMetrics(influxdbClient util.InfluxDBClient, window string) (map[string
 	return m, nil
 }
 
+// fetchAlerts fetches the last alerts from the database
 func fetchAlerts(influxdbClient util.InfluxDBClient) ([]alert, error) {
 	queryString := fmt.Sprintf(`
 		SELECT

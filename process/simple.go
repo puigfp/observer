@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	client "github.com/influxdata/influxdb/client/v2"
+	influxdb "github.com/influxdata/influxdb/client/v2"
 	"github.com/puigfp/observer/util"
 )
 
@@ -67,7 +67,7 @@ func computeMetricsHOF(template string) func(influxdbClient util.InfluxDBClient,
 			window.String(), offset.String(),
 		)
 
-		query := client.NewQuery(queryString, influxdbClient.Config.Database, influxdbClient.Config.Precision)
+		query := influxdb.NewQuery(queryString, influxdbClient.Config.Database, influxdbClient.Config.Precision)
 
 		response, err := influxdbClient.Client.Query(query)
 		if err != nil {
