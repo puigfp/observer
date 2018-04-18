@@ -19,7 +19,6 @@
 # ----------------
 # Personal entries
 # ----------------
-vendor/
 observer
 
 __influxdb/
