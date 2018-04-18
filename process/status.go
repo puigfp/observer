@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 
 	influxdb "github.com/influxdata/influxdb/client/v2"
@@ -116,7 +117,7 @@ func retrieveStatusCount(influxdbClient util.InfluxDBClient, status string, webs
 				time >= %v AND
 				time < %v
 		`,
-		website, status,
+		website, strings.Replace(status, "'", "\\'", -1),
 		begin.UnixNano(), end.UnixNano(),
 	)
 
