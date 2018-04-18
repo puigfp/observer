@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 
+	"github.com/puigfp/observer/display"
 	"github.com/puigfp/observer/fetch"
 	"github.com/puigfp/observer/process"
 	"github.com/puigfp/observer/util"
@@ -17,6 +18,7 @@ func main() {
 	app.Commands = []cli.Command{
 		fetch.Command,
 		process.Command,
+		display.Command,
 	}
 
 	err := app.Run(os.Args)
