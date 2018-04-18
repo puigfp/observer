@@ -21,13 +21,3 @@ func initState(config util.Config, st *state) error {
 
 	return nil
 }
-
-func updateState(influxdbClient util.InfluxDBClient, w widgets, st *state) {
-	fetchState(influxdbClient, st)
-	st.lock.Lock()
-	refreshSummaryWidget(w.summary, st)
-	refreshStatisticsWidget(w.statistics, st)
-	refreshAlertsWidget(w.alerts, st)
-	st.lock.Unlock()
-	render()
-}

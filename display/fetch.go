@@ -11,6 +11,16 @@ import (
 	"github.com/puigfp/observer/util"
 )
 
+func updateState(influxdbClient util.InfluxDBClient, w widgets, st *state) {
+	fetchState(influxdbClient, st)
+	st.lock.Lock()
+	refreshSummaryWidget(w.summary, st)
+	refreshStatisticsWidget(w.statistics, st)
+	refreshAlertsWidget(w.alerts, st)
+	st.lock.Unlock()
+	render()
+}
+
 func fetchState(influxdbClient util.InfluxDBClient, st *state) error {
 	metrics2m, err := fetchMetrics(influxdbClient, "2m")
 	if err != nil {
