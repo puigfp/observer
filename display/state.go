@@ -11,7 +11,7 @@ func initState(config util.Config, st *state) error {
 	st.websitesOrder = make([]string, 0)
 
 	for name := range config.Websites {
-		st.websites[name] = website{}
+		st.websites[name] = website{name: name}
 		st.websitesOrder = append(st.websitesOrder, name)
 	}
 

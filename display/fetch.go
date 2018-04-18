@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"time"
 
+	ui "github.com/gizak/termui"
 	influxdb "github.com/influxdata/influxdb/client/v2"
 	"github.com/puigfp/observer/util"
 )
