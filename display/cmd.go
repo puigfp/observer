@@ -13,7 +13,7 @@ import (
 var Command = cli.Command{
 	Name:    "display",
 	Aliases: []string{"d"},
-	Usage:   "Dislpaying the metrics stored in influxDB",
+	Usage:   "Displays the metrics stored in influxDB",
 	Flags: []cli.Flag{
 		cli.StringFlag{
 			Name:  "config",

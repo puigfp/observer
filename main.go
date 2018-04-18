@@ -13,7 +13,7 @@ import (
 func main() {
 	app := cli.NewApp()
 	app.Name = "observer"
-	app.Usage = ""
+	app.Usage = "Simple CLI website monitoring tool"
 
 	app.Commands = []cli.Command{
 		fetch.Command,
