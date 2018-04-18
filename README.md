@@ -55,6 +55,8 @@ You can easily download and compile this project and its dependencies by runnnin
 go get -v github.com github.com/puigfp/observer
 ```
 
+(the dependencies were added to this repository because fetching them using go get generate a compilation error)
+
 Copy the `config.template.json` to a brand new `config.json` and choose some websites to monitor.
 
 Run these 3 commands in the folder where you saved your configuration file (or use an optional flag to specify a custom configuration file, run `observer help <command>` for more info):
