@@ -88,8 +88,6 @@ Display:
 
 ## Running the tests
 
-TODO
-
 ```bash
 go test
 ```
