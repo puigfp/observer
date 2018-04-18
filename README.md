@@ -60,8 +60,8 @@ cd observer
 # download dependencies in the right versions to vendor/
 dep ensure
 
-# compile project and copy binary to $GO_PATH/bin/
-go build github.com/puigfp/observer
+# compile project
+go build
 ```
 
 Unfortunately, a dependency of one of this project's dependencies has made a breaking change, so this project will not compile if you try to install it using `go get -v github.com/puigfp/observer`. However, it compiles when using dep to fetch the dependencies in the right versions.
@@ -73,19 +73,19 @@ Run these 3 commands in the same folder:
 Fetch:
 
 ```bash
-observer fetch
+./observer fetch
 ```
 
 Process:
 
 ```bash
-observer process
+./observer process
 ```
 
 Display:
 
 ```bash
-observer display
+./observer display
 ```
 
 (the fetcher and processor must have been running for at least 1 minute before the display is able to display the full metrics information)
