@@ -9,6 +9,7 @@ import (
 	"github.com/puigfp/observer/util"
 )
 
+// computeAlerts compute the alerts and then send them to influxDB
 func computeAlerts(influxdbClient util.InfluxDBClient, window string, statuses *map[string]bool) error {
 	// get the possible alerts
 	alertsMap, err := retrieveAlerts(influxdbClient, window)
@@ -46,6 +47,7 @@ func computeAlerts(influxdbClient util.InfluxDBClient, window string, statuses *
 	return influxdbClient.Client.Write(batchPoints)
 }
 
+// retrieveAlerts retrieves from the database the last status of each website
 func retrieveAlerts(influxdbClient util.InfluxDBClient, window string) (map[string]alert, error) {
 	alerts := make(map[string]alert)
 
@@ -106,6 +108,7 @@ func retrieveAlerts(influxdbClient util.InfluxDBClient, window string) (map[stri
 	return alerts, nil
 }
 
+// filterAlerts compare the current status of each website to its previous status, and returns a list of generated alerts
 func filterAlerts(alerts map[string]alert, statuses *map[string]bool) []alert {
 	filteredAlerts := make([]alert, 0)
 
