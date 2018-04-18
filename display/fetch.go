@@ -166,7 +166,7 @@ func fetchMetrics(influxdbClient util.InfluxDBClient, window string) (map[string
 func fetchAlerts(influxdbClient util.InfluxDBClient) ([]alert, error) {
 	queryString := fmt.Sprintf(`
 		SELECT
-			time, website, status
+			time, website, status, availability
 		FROM
 			alerts
 		ORDER BY time DESC
@@ -200,11 +200,17 @@ func fetchAlerts(influxdbClient util.InfluxDBClient) ([]alert, error) {
 				fmt.Println(status)
 				continue
 			}
+			availability, ok := util.ParseJSONFloat(a[3])
+			if !ok {
+				fmt.Println(status)
+				continue
+			}
 
 			alerts = append(alerts, alert{
-				timestamp: time.Unix(0, timestamp),
-				website:   website,
-				status:    status,
+				timestamp:    time.Unix(0, timestamp),
+				website:      website,
+				status:       status,
+				availability: availability,
 			})
 		}
 

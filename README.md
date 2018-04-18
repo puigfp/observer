@@ -88,6 +88,8 @@ Display:
 ./observer display
 ```
 
+(press q to quit the dashboard)
+
 (the fetcher and processor must have been running for at least 1 minute before the display is able to display the full metrics information)
 
 Metrics are computed:
@@ -166,26 +168,27 @@ go test ./...
 
     - status: bool
 
-## Improvements
+    - availability: float
 
-- possible implementation improvements
+## Possible improvements
 
-  - The 3 commands use the same configuration file format
 
-    - the `process` command doesn't need the websites list to work
+- The 3 commands use the same configuration file format
 
-    - the `display` command should not read the websites list from the configuration file, but instead fetch it using a call to the back-end.
+  - the `process` command doesn't need the websites list to work
 
-    - -> there should be 3 configuration file formats, one for each module
+  - the `display` command should not read the websites list from the configuration file, but instead fetch it using a call to the back-end.
 
-  - Better handling of the `net/http` error messages categorization.
+  - -> there should be 3 configuration file formats, one for each module
 
-  - Better handling of errors that can happen in the display part, the current UI does not show any error message if something goes wrong when fetching the data from the database, and instead only shows "NO DATA" in place of the metrics.
+- Better handling of the `net/http` error messages categorization.
 
-  - Better handling of terminal window resize, right now, the programs needs to wait for the next (keypress or metrics) fetch triggered render to resize the widgets to fit the new window size.
+- Better handling of errors that can happen in the display part, the current UI does not show any error message if something goes wrong when fetching the data from the database, and instead only shows "NO DATA" in place of the metrics.
 
-- possible design improvements
+- Add an optional 'timeout' parameter to each website's configuration to avoid keep connections open for too long.
 
-  - Change how the data processing is done. In this implementation, the processor polls the database regularily to process the metrics of the last window. If the processor is down during a small period of time and then is back up, it won't process the data it missed.
+- Change how the data processing is done. In this implementation, the processor polls the database regularily to process the metrics of the last window. If the processor is down during a small period of time and then is back up, it won't process the data it missed.
 
-  - Better dashboard refresh flow, to allow each piece of information to be refreshed at its own rate. In the current implementation the dashboard refreshes all the data it shows every 10 seconds (websites statuses, metrics over 10m and 1h window, alerts), making a lot of useless db API calls given that some data only changes every minute in the backend side. One solution could be to allow the information to be pushed by the back-end to the dashboard (using websockets for example).
+- Better dashboard refresh flow, to allow each piece of information to be refreshed at its own rate. In the current implementation the dashboard refreshes all the data it shows every 10 seconds (websites statuses, metrics over 10m and 1h window, alerts), making a lot of useless db API calls given that some data only changes every minute in the backend side. One solution could be to allow the information to be pushed by the back-end to the dashboard (using websockets for example).
+
+- Better handling of terminal window resize, right now, the programs needs to wait for the next event triggered render to resize the widgets so that they fit the new window size.

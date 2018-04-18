@@ -38,9 +38,10 @@ type metrics struct {
 
 // alert holds all the data about an alert
 type alert struct {
-	website   string
-	timestamp time.Time
-	status    bool
+	website      string
+	timestamp    time.Time
+	status       bool
+	availability float64
 }
 
 // widgets stores pointers to the 3 widgets that make the ui

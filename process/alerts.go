@@ -35,7 +35,8 @@ func computeAlerts(influxdbClient util.InfluxDBClient, window string, statuses *
 		pt, err := influxdb.NewPoint("alerts", map[string]string{
 			"website": alert.website,
 		}, map[string]interface{}{
-			"status": alert.status,
+			"status":       alert.status,
+			"availability": alert.availability,
 		}, alert.timestamp)
 		if err != nil {
 			return err
@@ -94,14 +95,20 @@ func retrieveAlerts(influxdbClient util.InfluxDBClient, window string) (map[stri
 			return alerts, errors.New("success counts returned by influxDB could not be interpreted as integers")
 		}
 
+		var availability float64 = 1
+		if falseCount > 0 {
+			availability = float64(trueCount) / float64(trueCount+falseCount)
+		}
+
 		// compare trueCount/totalCount with 0.8 threshold
-		status := falseCount == 0 || float64(trueCount)/float64(trueCount+falseCount) > 0.8
+		status := availability > 0.8
 
 		// add alert object to the map
 		alerts[website] = alert{
-			timestamp: time.Unix(0, timestamp),
-			website:   website,
-			status:    status,
+			timestamp:    time.Unix(0, timestamp),
+			website:      website,
+			status:       status,
+			availability: availability,
 		}
 	}
 

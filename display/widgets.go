@@ -58,6 +58,7 @@ func refreshAlertsWidget(alerts *ui.List, st *state) *ui.List {
 		}
 
 		line += alert.website
+		line += fmt.Sprintf(" (%.2f%%)", alert.availability*100)
 		alertsList = append(alertsList, line)
 	}
 
