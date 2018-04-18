@@ -85,7 +85,63 @@ go test
 
 ## InfluxDB database structure
 
-TODO
+- `metrics`
+
+  cf. [fetch sub-package type declarations](fetch/type.go)
+
+  - tags
+
+    - timestamp
+
+    - website
+
+  - fields
+
+    - responseTime: int
+
+    - status: string
+
+    - statusCode: int
+
+    - success: true
+
+- `metrics_2m`, `metrics_10m`, `metrics_1h`
+
+  - tags
+
+    - timestamp
+
+    - website
+
+  - fields
+
+    - responseTime_avg: float
+
+    - responseTime_min: int
+
+    - responseTime_max: int
+
+    - responseTime_99thPercentile: int
+
+    - statuts_counts: string
+
+      JSON formatted string representing a 'status string' -> 'count' map
+
+    - success_false_count: int
+
+    - success_true_count: int
+
+- `alerts`
+
+  - tags
+
+    - timestamp
+
+    - website
+
+  - fields
+
+    - status: bool
 
 ## Improvements
 
