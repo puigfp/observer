@@ -60,9 +60,11 @@ cd observer
 # download dependencies in the right versions to vendor/
 dep ensure
 
-# compile project
-go build
+# compile project and copy binary to $GO_PATH/bin/
+go build github.com/puigfp/observer
 ```
+
+Unfortunately, a dependency of one of this project's dependencies has made a breaking change, so this project will not compile if you try to install it using `go get -v github.com/puigfp/observer`. However, it compiles when using dep to fetch the dependencies in the right versions.
 
 Copy the `config.template.json` to a brand new `config.json` and choose some websites to monitor.
 
@@ -71,20 +73,22 @@ Run these 3 commands in the same folder:
 Fetch:
 
 ```bash
-./observer fetch
+observer fetch
 ```
 
 Process:
 
 ```bash
-./observer process
+observer process
 ```
 
 Display:
 
 ```bash
-./observer display
+observer display
 ```
+
+(the fetcher and processor must have been running for at least 1 minute before the display is able to display the full metrics information)
 
 ## Running the tests
 
@@ -160,16 +164,16 @@ go test ./...
 
     - the `process` command doesn't need the websites list to work
 
-    - the `display` command should not read the websites list from the configuration file, but instead fetch it using a call to the back-end
+    - the `display` command should not read the websites list from the configuration file, but instead fetch it using a call to the back-end.
 
     - -> there should be 3 configuration file formats, one for each module
 
   - Better handling of the `net/http` error messages categorization.
 
-  - Better handling of errors that can happen in the displaying part, the current ui does not show any error message if something goes wrong, and instead only shows "NO DATA" in place of the metrics.
+  - Better handling of errors that can happen in the display part, the current UI does not show any error message if something goes wrong when fetching the data from the database, and instead only shows "NO DATA" in place of the metrics.
 
 - possible design improvements
 
   - Change how the data processing is done. In this implementation, the processor polls the database regularily to process the metrics of the last window. If the processor is down during a small period of time and then is back up, it won't process the data it missed.
 
-  - Better dashboard refresh flow, to allow each piece of information to be refreshed at its own rate. In the current implementation the dashboard refreshes all the data it shows every 10 seconds (websites statuses, metrics over 10m and 1h window, alerts), making a lot of useless db API calls given that some data only changes every minute. One solution could be to allow the information to be pushed by the back-end to the dashboard (using websockets for example).
+  - Better dashboard refresh flow, to allow each piece of information to be refreshed at its own rate. In the current implementation the dashboard refreshes all the data it shows every 10 seconds (websites statuses, metrics over 10m and 1h window, alerts), making a lot of useless db API calls given that some data only changes every minute in the backend side. One solution could be to allow the information to be pushed by the back-end to the dashboard (using websockets for example).
