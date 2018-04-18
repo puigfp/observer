@@ -94,11 +94,11 @@ Display:
 
 Metrics are computed:
 
-  - each 5 seconds for the last 2 minutes window
+- each 5 seconds for the last 2 minutes window
 
-  - each 10 seconds for the last 10 minutes window
+- each 10 seconds for the last 10 minutes window
 
-  - each minute for the last hour window
+- each minute for the last hour window
 
 Alerts are computed every 5 seconds.
 
