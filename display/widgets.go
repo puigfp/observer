@@ -104,6 +104,7 @@ func refreshStatisticsWidget(statistics *ui.Par, st *state) *ui.Par {
 // getStatisticsString computes a string that is used by refreshStatisticsWidget
 func getStatisticsString(m metrics) string {
 	s := fmt.Sprintf(`[Availability](fg-bold) %.1f%%
+
 		[Response time](fg-bold)
 		- avg:   %.0fms
 		- min:   %vms

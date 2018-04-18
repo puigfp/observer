@@ -39,10 +39,13 @@ func fetchState(influxdbClient util.InfluxDBClient, st *state) error {
 			site.status = &status
 		}
 
+		// metrics over 10m windows
 		m10m, ok := metrics10m[name]
 		if ok {
 			site.metrics10m = &m10m
 		}
+
+		// metrics over 1h windows
 		m1h, ok := metrics1h[name]
 		if ok {
 			site.metrics1h = &m1h
