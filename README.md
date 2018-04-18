@@ -89,7 +89,7 @@ Display:
 ## Running the tests
 
 ```bash
-go test
+go test ./...
 ```
 
 ## InfluxDB database structure
