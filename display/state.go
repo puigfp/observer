@@ -6,16 +6,11 @@ import (
 	"github.com/puigfp/observer/util"
 )
 
-func initState(influxdbClient util.InfluxDBClient, st *state) error {
-	metrics2m, err := fetchMetrics(influxdbClient, "2m")
-	if err != nil {
-		return err
-	}
-
+func initState(config util.Config, st *state) error {
 	st.websites = make(map[string]website)
 	st.websitesOrder = make([]string, 0)
 
-	for name := range metrics2m {
+	for name := range config.Websites {
 		st.websites[name] = website{}
 		st.websitesOrder = append(st.websitesOrder, name)
 	}
