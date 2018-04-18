@@ -25,9 +25,14 @@ func fetchState(influxdbClient util.InfluxDBClient, st *state) error {
 		return err
 	}
 
-	// TODO: fetch alerts
+	alerts, err := fetchAlerts(influxdbClient)
+	if err != nil {
+		return err
+	}
 
 	st.lock.Lock()
+	st.alerts = alerts
+
 	for name := range st.websites {
 		site := website{
 			name: name,
@@ -140,4 +145,55 @@ func fetchMetrics(influxdbClient util.InfluxDBClient, window string) (map[string
 	}
 
 	return m, nil
+}
+
+func fetchAlerts(influxdbClient util.InfluxDBClient) ([]alert, error) {
+	queryString := fmt.Sprintf(`
+		SELECT
+			time, website, status
+		FROM
+			alerts
+		ORDER BY time DESC
+		LIMIT %v
+	`, ui.TermHeight())
+
+	query := influxdb.NewQuery(queryString, influxdbClient.Config.Database, influxdbClient.Config.Precision)
+
+	response, err := influxdbClient.Client.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	if err := response.Error(); err != nil {
+		return nil, err
+	}
+
+	if !(len(response.Results) == 0 || len(response.Results[0].Series) == 0) {
+		alerts := make([]alert, 0)
+		for _, a := range response.Results[0].Series[0].Values {
+			timestamp, ok := util.ParseJSONNumber(a[0])
+			if !ok {
+				continue
+			}
+			website, ok := a[1].(string)
+			if !ok {
+				fmt.Println(website)
+				continue
+			}
+			status, ok := a[2].(bool)
+			if !ok {
+				fmt.Println(status)
+				continue
+			}
+
+			alerts = append(alerts, alert{
+				timestamp: time.Unix(0, timestamp),
+				website:   website,
+				status:    status,
+			})
+		}
+
+		return alerts, nil
+	}
+
+	return nil, nil
 }
