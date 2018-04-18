@@ -1,0 +1,30 @@
+{
+  "influxdb": {
+    "address": "http://localhost:8086",
+    "database": "observer",
+    "retention_policy": "autogen",
+    "precision": "ns"
+  },
+  "websites": [
+    {
+      "name": "myspace",
+      "url": "https://myspace.com/",
+      "poll_rate": 500
+    },
+    {
+      "name": "yahoo",
+      "url": "https://yahoo.com/",
+      "poll_rate": 500
+    },
+    {
+      "name": "blackberry",
+      "url": "https://global.blackberry.com/",
+      "poll_rate": 500
+    },
+    {
+      "name": "aol",
+      "url": "https://aol.com/",
+      "poll_rate": 500
+    }
+  ]
+}
