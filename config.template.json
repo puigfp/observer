@@ -25,6 +25,11 @@
       "name": "aol",
       "url": "https://aol.com/",
       "poll_rate": 500
+    },
+    {
+      "name": "msn",
+      "url": "https://msn.com/",
+      "poll_rate": 500
     }
   ]
 }
