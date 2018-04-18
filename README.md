@@ -52,10 +52,10 @@ To run this project manually, it is required to run each module in its own shell
 You can easily download and compile this project and its dependencies by runnning the following commands:
 
 ```bash
-# clone repository
-git clone https://github.com/puigfp/observer.git
+# clone repository to $GO_PATH/src/github.com/puigfp/observer
+go get -d -v github.com github.com/puigfp/observer
 
-cd observer
+cd $GO_PATH/src/github.com/puigfp/observer
 
 # download dependencies in the right versions to vendor/
 dep ensure

@@ -2,22 +2,10 @@
 
 
 [[projects]]
-  name = "github.com/codegangsta/inject"
-  packages = ["."]
-  revision = "37d7f8432a3e684eef9b2edece76bdfa6ac85b39"
-  version = "v1.0-rc1"
-
-[[projects]]
   name = "github.com/gizak/termui"
   packages = ["."]
   revision = "24acd523c756fd9728824cdfac66aad9d8982fb7"
   version = "v2.2.0"
-
-[[projects]]
-  name = "github.com/go-martini/martini"
-  packages = ["."]
-  revision = "49411a5b646861ad29a6ddd5351717a0a9c49b94"
-  version = "v1.0"
 
 [[projects]]
   name = "github.com/influxdata/influxdb"
@@ -62,6 +50,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "bb77a5e02e7ebfb879eaad84da9c8ca7bb81ceaa0ff5be11c07d09bfe7b2828f"
+  inputs-digest = "b574970ef86e87274a366e1b5a57a90c6142505b4c4d2152640bf56a08b72f9b"
   solver-name = "gps-cdcl"
   solver-version = 1
