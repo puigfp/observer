@@ -1,6 +1,6 @@
 # Observer
 
-Observer is a simple CLI website monitoring tool.
+Observer is a simple CLI website monitoring tool (Datadog hiring process exercise).
 
 ![screenshot](screenshot.png)
 
